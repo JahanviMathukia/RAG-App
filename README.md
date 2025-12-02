@@ -143,6 +143,7 @@ Grounded Answer Returned
 │   └── tests.json             # ≥15 test cases
 │
 ├── requirements.txt
+├── run_app.py
 ├── .env.example
 └── README.md
 ```
