@@ -83,3 +83,5 @@
 {"timestamp": "2025-12-02T16:07:04", "pathway": "rag", "latency_ms": 1391.59, "prompt_tokens_est": 710, "response_tokens_est": 79, "total_tokens_est": 789, "approx_cost_usd": 0.0, "model": "gemini-2.5-flash"}
 {"timestamp": "2025-12-02T16:07:07", "pathway": "rag", "latency_ms": 3175.03, "prompt_tokens_est": 513, "response_tokens_est": 41, "total_tokens_est": 554, "approx_cost_usd": 0.0, "model": "gemini-2.5-flash"}
 {"timestamp": "2025-12-02T16:07:08", "pathway": "rag", "latency_ms": 1250.11, "prompt_tokens_est": 710, "response_tokens_est": 26, "total_tokens_est": 736, "approx_cost_usd": 0.0, "model": "gemini-2.5-flash"}
+{"timestamp": "2025-12-02T16:22:22", "pathway": "rag", "latency_ms": 1210.79, "prompt_tokens_est": 311, "response_tokens_est": 7, "total_tokens_est": 318, "approx_cost_usd": 0.0, "model": "gemini-2.5-flash"}
+{"timestamp": "2025-12-02T16:24:32", "pathway": "rag", "latency_ms": 1289.05, "prompt_tokens_est": 311, "response_tokens_est": 7, "total_tokens_est": 318, "approx_cost_usd": 0.0, "model": "gemini-2.5-flash"}

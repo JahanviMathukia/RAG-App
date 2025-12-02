@@ -12,6 +12,11 @@ This project satisfies all requirements of the  **LLM App Assignment** : core fe
 
 # Features
 
+### Core Feature
+
+* CLI app where a user asks: **“What do my documents say about X?”**
+* The app retrieves the most relevant text chunks from embedded course PDFs and uses Gemini to produce an answer.
+
 ### Architecture Diagram
 
 ```
@@ -47,10 +52,46 @@ Grounded Answer Returned
 
 ```
 
-### ✅ Core Feature
+## How the App Works: End-to-End
 
-* CLI app where a user asks: **“What do my documents say about X?”**
-* The app retrieves the most relevant text chunks from embedded course PDFs and uses Gemini to produce an answer.
+1. **User enters a question** in the CLI.
+2. **Safety Layer checks** :
+
+* Empty/whitespace input
+* Input too long
+* Prompt-injection attempts
+
+3. **RAG Retrieval** :
+
+* User query is embedded using `all-MiniLM-L6-v2`
+* Cosine similarity is computed against all document chunks
+* Top-k chunks are selected (default k=3)
+
+  4**. Prompt Construction** :
+* Retrieved chunks are inserted into a structured prompt
+* System prompt enforces DO/DON’T rules including:
+
+  * **Input length guard** (questions > 2000 chars are rejected)
+  * **Prompt-injection detection** for phrases like: *“ignore previous instructions”, “reveal your system prompt”*
+  * **Error fallback message** for any LLM/API failure
+  * If an answer is not supported by the documents, the model must say: **“I don’t know based on the docs.”**
+
+5. **Gemini Call** :
+
+* Grounded answer generated using the provided context only
+
+6. **Telemetry Logged** :
+
+* Each entry contains:
+
+  * timestamp
+  * pathway (`rag`, `blocked_prompt_injection`, `too_long`, `error`, `cache_hit`)
+  * latency (ms)
+  * rough token estimates
+  * model name
+* Logged to `logs/requests.log`
+
+7. **Response Returned** in a formatted CLI output.
 
 ### ✅ Enhancement: **RAG**
 
@@ -59,52 +100,25 @@ Grounded Answer Returned
 * Context-injected prompts to Gemini for grounded answers
 * Full index built once and cached
 
-### ✅ Safety & Robustness
-
-* System prompt with explicit **DO/DON’T rules**
-* **Input length guard** (questions > 2000 chars are rejected)
-* **Prompt-injection detection** for phrases like: *“ignore previous instructions”, “reveal your system prompt”*
-* **Error fallback message** for any LLM/API failure
-* If an answer is not supported by the documents, the model must say: **“I don’t know based on the docs.”**
-
-### ✅ Telemetry
-
-Per-request JSON logs stored at:
-
-<pre class="overflow-visible!" data-start="1710" data-end="1735"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>logs/requests.log
-</span></span></code></div></div></pre>
-
-Each entry contains:
-
-* timestamp
-* pathway (`rag`, `blocked_prompt_injection`, `too_long`, `error`, `cache_hit`)
-* latency (ms)
-* rough token estimates
-* model name
-
 ### ✅ Offline Evaluation
 
 * `tests/tests.json` containing ≥ 15 test cases
 * `app/offline_eval.py` runs all tests and prints a **pass rate**
 * Covers length guard, injection guard, unknown questions, repeated query (cache), and RAG queries
 
-### ✅ Reproducibility
-
-Project includes:
-
-* `README.md` (this file)
-* `requirements.txt`
-* `.env.example`
-* Seed PDFs in `data/docs`
-* One-command run script: `python -m app.rag_cli`
-* Offline eval script: `python -m app.offline_eval`
-* Deterministic embeddings index at `embeddings/index.pkl`
-
 ### ⭐ Bonus Implemented
 
 * Cached embedding model (faster retrieval)
 * Response caching (identical questions → instant answers)
 * Rich CLI formatting (colored prompts, soft wrapping)
+
+### Known Limitations
+
+* Only answers based strictly on uploaded PDFs
+* Does not access external sources or the internet
+* Simple substring-based offline eval
+* Accuracy depends on document quality and chunking
+* CLI interface (no web UI)
 
 # Project Structure
 
@@ -172,12 +186,12 @@ python -m app.build_index
 ## 6. Running the App
 
 ```
-python -m app.rag_cli
+python run_app.py
 ```
 
 You will see:
 
-![1764709560161](image/README/1764709560161.png)
+![1764710778729](image/README/1764710778729.png)
 
 ## 7. Run Offline Evaluation
 
