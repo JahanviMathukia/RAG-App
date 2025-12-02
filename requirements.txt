@@ -1,0 +1,9 @@
+numpy
+scikit-learn
+sentence-transformers
+pypdf
+tqdm
+python-dotenv
+rich
+google-genai
+pytest
