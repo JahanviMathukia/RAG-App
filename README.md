@@ -123,7 +123,6 @@ Grounded Answer Returned
 # Project Structure
 
 ```
-
 .
 ├── app
 │   ├── build_index.py         # Builds embedding index from PDFs
