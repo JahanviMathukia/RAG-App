@@ -1,5 +1,7 @@
 # 📚 RAG Study Buddy — LLM Course Notes Assistant
 
+Demo link: https://youtu.be/XxvDf4ApllU
+
 *A Retrieval-Augmented Generation (RAG) CLI App using Gemini + Local Embeddings*
 
 This application is a lightweight, fully local + API-powered **RAG (Retrieval-Augmented Generation)** system.
